@@ -20,7 +20,7 @@ class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
 
-    def get_queryset(self):  #Flaw 3 Injection flaw, to prevent SQL injection dont use Python string formatting to compose a query, safer alternative commented out below
+    def get_queryset(self):  #Flaw 4 Injection flaw, to prevent SQL injection dont use Python string formatting to compose a query, safer alternative commented out below
         user_input = self.request.GET.get('user_filter', '')
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM polls_question WHERE title LIKE '%{}%'".format(user_input))
@@ -46,7 +46,7 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
 
-#Flaw 4 Insecure deserialization, avoid deserializing data from untrusted sources. A safe serialization format as JSON could have been used
+
 
 @csrf_exempt    #Flaw 5 CSRF, To fix this flaw i would have to remove the "@csrf_exempt"
 def vote(request, question_id):
